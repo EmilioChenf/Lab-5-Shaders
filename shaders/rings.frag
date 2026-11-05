@@ -1,5 +1,4 @@
-#version 100
-precision highp float;
+#version 120
 varying vec3 local;
 void main() {
     float r=length(local.xz);

@@ -15,6 +15,10 @@ impl Renderer {
             ring: shaders::rings()?,
         })
     }
+    /// Production uses all four contributions; audit renders omit one at a time.
+    pub fn set_layers(&self, mask: Vec4) {
+        self.body.set_uniform("LayerMask", mask);
+    }
     fn place(material: &Material, center: Vec3, radius: f32, spin: f32, tilt: f32) {
         material.set_uniform("Center", center);
         material.set_uniform("Radius", radius);
@@ -27,6 +31,10 @@ impl Renderer {
         for (i, b) in catalog.iter().enumerate() {
             if selected.is_some_and(|index| index != i && !(index == 1 && i == 6)) {
                 continue;
+            }
+            // Parent-view audits isolate its surface; its companion stays unchanged.
+            if selected == Some(1) && i == 6 {
+                self.body.set_uniform("LayerMask", Vec4::ONE);
             }
             self.body.set_uniform("Kind", i as f32);
             Self::place(

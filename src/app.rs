@@ -22,7 +22,8 @@ pub async fn run() {
     let mut selected = None;
     let mut paused = false;
     let mut time = 0.;
-    let automatic = std::env::args().any(|a| a == "--capture-all");
+    let audit_layers = std::env::args().any(|a| a == "--audit-layers");
+    let automatic = audit_layers || std::env::args().any(|a| a == "--capture-all");
     let mut frame = 0;
     loop {
         if is_key_pressed(KeyCode::Escape) {
@@ -55,7 +56,9 @@ pub async fn run() {
         }
         if automatic {
             let view = frame / 8;
-            selected = if view == 0 {
+            selected = if audit_layers {
+                Some((view / 5).min(6))
+            } else if view == 0 {
                 None
             } else {
                 Some((view - 1).min(6))
@@ -83,6 +86,14 @@ pub async fn run() {
                 Color::from_rgba(105, 125, 155, 180),
             );
         }
+        let mut mask = Vec4::ONE;
+        if audit_layers {
+            let omitted = (frame / 8) % 5;
+            if omitted > 0 {
+                mask[omitted - 1] = 0.;
+            }
+        }
+        renderer.set_layers(mask);
         set_camera(&orbit.camera(target));
         renderer.draw(&catalog, time, orbit.eye(target), selected);
         set_default_camera();
@@ -100,7 +111,13 @@ pub async fn run() {
             format!(
                 "{} FPS  |  {}",
                 get_fps(),
-                if paused { "PAUSA" } else { "EN MOVIMIENTO" }
+                if automatic {
+                    "CAPTURA"
+                } else if paused {
+                    "PAUSA"
+                } else {
+                    "EN MOVIMIENTO"
+                }
             ),
             screen_width() - 280.,
             35.,
@@ -132,14 +149,24 @@ pub async fn run() {
         }
         if is_key_pressed(KeyCode::F12) || (automatic && frame % 8 == 7) {
             let name = selected.map_or("atlas", |i| catalog[i].name);
-            if let Err(e) = std::fs::create_dir_all("docs/screenshots") {
+            let directory = if audit_layers {
+                format!("docs/audit/layers/{name}")
+            } else {
+                "docs/screenshots".to_owned()
+            };
+            let filename = if audit_layers {
+                format!("variante_{}", (frame / 8) % 5)
+            } else {
+                name.to_owned()
+            };
+            if let Err(e) = std::fs::create_dir_all(&directory) {
                 eprintln!("Captura: {e}");
             } else {
-                get_screen_data().export_png(&format!("docs/screenshots/{name}.png"));
+                get_screen_data().export_png(&format!("{directory}/{filename}.png"));
             }
         }
         frame += 1;
-        if automatic && frame >= 64 {
+        if automatic && frame >= if audit_layers { 280 } else { 64 } {
             break;
         }
         next_frame().await;

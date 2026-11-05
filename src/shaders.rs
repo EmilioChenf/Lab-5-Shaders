@@ -14,6 +14,7 @@ pub fn body() -> Result<Material, macroquad::Error> {
             },
             uniforms: vec![
                 UniformDesc::new("Time", UniformType::Float1),
+                UniformDesc::new("LayerMask", UniformType::Float4),
                 UniformDesc::new("Kind", UniformType::Float1),
                 UniformDesc::new("Spin", UniformType::Float1),
                 UniformDesc::new("Center", UniformType::Float3),
