@@ -1,0 +1,39 @@
+    Finished `release` profile [optimized] target(s) in 0.01s
+PASS: atlas.png (1440x900)
+PASS: PAPATIN.png (1440x900)
+PASS: PAPATINSENIOR.png (1440x900)
+PASS: MAMBO.png (1440x900)
+PASS: CRYON.png (1440x900)
+PASS: CITOPA.png (1440x900)
+PASS: VERDANTIS.png (1440x900)
+PASS: NYX.png (1440x900)
+PASS: ocho capturas nuevas, válidas y diferentes.
+PASS: PAPATIN, capa 1: 255235 píxeles modificados
+PASS: PAPATIN, capa 2: 30594 píxeles modificados
+PASS: PAPATIN, capa 3: 74471 píxeles modificados
+PASS: PAPATIN, capa 4: 156027 píxeles modificados
+PASS: PAPATINSENIOR, capa 1: 68239 píxeles modificados
+PASS: PAPATINSENIOR, capa 2: 64418 píxeles modificados
+PASS: PAPATINSENIOR, capa 3: 34545 píxeles modificados
+PASS: PAPATINSENIOR, capa 4: 13012 píxeles modificados
+PASS: MAMBO, capa 1: 68511 píxeles modificados
+PASS: MAMBO, capa 2: 24079 píxeles modificados
+PASS: MAMBO, capa 3: 809 píxeles modificados
+PASS: MAMBO, capa 4: 68808 píxeles modificados
+PASS: CRYON, capa 1: 78834 píxeles modificados
+PASS: CRYON, capa 2: 82924 píxeles modificados
+PASS: CRYON, capa 3: 24435 píxeles modificados
+PASS: CRYON, capa 4: 91673 píxeles modificados
+PASS: CITOPA, capa 1: 119743 píxeles modificados
+PASS: CITOPA, capa 2: 66265 píxeles modificados
+PASS: CITOPA, capa 3: 16993 píxeles modificados
+PASS: CITOPA, capa 4: 73880 píxeles modificados
+PASS: VERDANTIS, capa 1: 74267 píxeles modificados
+PASS: VERDANTIS, capa 2: 73911 píxeles modificados
+PASS: VERDANTIS, capa 3: 10654 píxeles modificados
+PASS: VERDANTIS, capa 4: 23247 píxeles modificados
+PASS: NYX, capa 1: 50555 píxeles modificados
+PASS: NYX, capa 2: 50534 píxeles modificados
+PASS: NYX, capa 3: 1773 píxeles modificados
+PASS: NYX, capa 4: 2435 píxeles modificados
+PASS: 28 contribuciones observadas, 35 renders nuevos, 7 vistas iguales a producción

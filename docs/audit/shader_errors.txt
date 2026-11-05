@@ -1,0 +1,1 @@
+PASS: GLSL inválido rechazado mediante el cargador real; no se creó un material de sustitución

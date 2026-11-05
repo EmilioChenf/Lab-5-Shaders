@@ -16,10 +16,9 @@ color en las superficies.**
 - Macroquad/Miniquad proporciona ventana, entrada, GPU y cámara. Se escogió como
   alternativa a Raylib para evitar una instalación nativa adicional y mantener
   el proyecto pequeño y portable. No se utiliza Raylib ni Blender.
-- Backend OpenGL de escritorio, shaders `#version 100` (GLSL ES 1.00 aceptado por
-  el contexto de compatibilidad del backend). Requiere un controlador compatible
-  con OpenGL 2.1 o superior y soporte de estos shaders; no apunta a un contexto
-  exclusivamente core 3.3. Los shaders se compilaron realmente en Mesa/Linux.
+- Backend OpenGL de escritorio, shaders `#version 120` (GLSL de escritorio 1.20). Requiere un controlador compatible
+  con OpenGL 2.1 o superior; no apunta a WebGL ni a Metal. Los shaders se
+  compilaron y ejecutaron realmente en Mesa/Linux limitado a OpenGL 2.1 y GLSL 1.20.
 - Fuente del shader embebida con `include_str!`: el ejecutable no necesita buscar
   archivos GLSL relativos a su ubicación. Los PNG de `docs/` no son recursos de
   ejecución. La fuente de la interfaz la proporciona Macroquad.
@@ -199,12 +198,14 @@ cargo clippy --all-targets --locked -- -D warnings
 cargo build --release --locked
 ```
 
-Resultado real: los cinco comandos completaron correctamente, **7 pruebas
+Resultado real: los cinco comandos completaron correctamente, **8 pruebas
 aprobadas, 0 fallidas**, y Clippy sin advertencias. Se ejecutó la aplicación,
 se compilaron los shaders en la GPU Mesa por software y se generaron los ocho
 PNG. La prueba XTest validó selección, F12, pausa/reanudación, arrastre, reset,
 zoom, retorno al atlas y salida. Ver [detalle y limitaciones](docs/VALIDATION.md).
-No se probaron Windows, otras GPU ni redimensionamiento mediante eventos.
+El redimensionamiento a 1280×720 también se comprobó con eventos X11.
+`cargo check --locked --target x86_64-pc-windows-gnu` pasó, pero la ejecución
+nativa en Windows y otras GPU permanecen **NO VERIFICADO**.
 
 ## Evidencia de la rúbrica
 
@@ -229,3 +230,25 @@ GitHub asocia los commits según los correos verificados de la cuenta; configura
 Git localmente no verifica ese correo en GitHub. La revisión de los 19 commits
 anteriores y la estrategia sin pérdida están en [HISTORIAL.md](docs/HISTORIAL.md).
 No se ha reescrito el historial publicado ni usado force push.
+
+## Auditoría final contra la rúbrica
+
+[Informe completo](docs/AUDITORIA.md): inventario de seis cuerpos principales y
+una luna, evaluación razonada de creatividad, pruebas ejecutadas, correcciones,
+28 capas con archivo, expresión, uniformes y píxeles afectados, y límites de la
+verificación. **VERDANTIS es planeta y NYX es luna**, conforme a la aclaración
+expresa del usuario; la luna no se contabiliza como planeta adicional.
+
+Para repetir la auditoría de capas con una sesión gráfica activa y Pillow:
+
+```powershell
+python scripts/audit_layers.py
+```
+
+El script compila, regenera las ocho capturas, comprueba el rechazo de GLSL
+inválido y crea 35 renders en `docs/audit/layers/`: por cuerpo, una vista completa
+y cuatro vistas omitiendo una contribución cada vez. `docs/audit/layers.json`
+registra los 28 cambios observados. La imagen con las cuatro capas activas debe
+ser idéntica a la captura de producción en el área sin interfaz. `LayerMask`
+siempre vale `(1,1,1,1)` en ejecución normal; no se han sustituido los diseños.
+El modo `--audit-layers` también puede ejecutarse directamente desde el binario.

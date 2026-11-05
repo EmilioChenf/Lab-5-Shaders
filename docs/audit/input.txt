@@ -1,0 +1,7 @@
+PASS: keys 1-7 select correct screenshot names; F12 writes new frames
+PASS: pause freezes body pixels; resume changes them
+PASS: mouse orbit, R reset, wheel zoom change expected image
+PASS: anillos visibles desde vista superior: 73000 píxeles dorados fuera de la esfera
+PASS: anillos visibles desde vista inferior: 52812 píxeles dorados fuera de la esfera
+PASS: redimensionamiento real a 1280x720 y captura de Nyx
+PASS: 0 restores atlas; Escape exits cleanly

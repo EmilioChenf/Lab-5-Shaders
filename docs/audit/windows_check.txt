@@ -1,0 +1,2 @@
+    Checking lab-5-shaders v0.1.0 (/workspace/Lab-5-Shaders)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s

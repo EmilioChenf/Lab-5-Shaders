@@ -1,0 +1,20 @@
+    Checking lab-5-shaders v0.1.0 (/workspace/Lab-5-Shaders)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s
+   Compiling lab-5-shaders v0.1.0 (/workspace/Lab-5-Shaders)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running unittests src/main.rs (target/debug/deps/lab_5_shaders-d819a75ffdff3d93)
+
+running 8 tests
+test camera::tests::orbit_preserves_distance_and_targets_translation ... ok
+test bodies::tests::moon_orbit_stays_outside_parent ... ok
+test bodies::tests::catalog_has_seven_distinct_bodies ... ok
+test bodies::tests::moon_selection_tracks_orbit_and_has_own_framing ... ok
+test geometry::tests::annulus_is_separate_and_has_open_center ... ok
+test geometry::tests::reject_mesh_index_overflow - should panic ... ok
+test geometry::tests::sphere_indices_and_normals_are_valid ... ok
+test camera::tests::rings_fit_viewport_when_orbiting_default_focus ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+    Finished `release` profile [optimized] target(s) in 0.03s

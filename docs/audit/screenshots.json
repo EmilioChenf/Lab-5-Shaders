@@ -1,0 +1,58 @@
+[
+  {
+    "file": "atlas.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "e4ecc68c7cc740ca6117677a5503a5046cf0f6cccdbbf74fbaa039fb4be7b208"
+  },
+  {
+    "file": "PAPATIN.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "f9cc2a7d141bad809718846de7e95fffd4f2f29ab09d30116d4a4ea7ed53e52c"
+  },
+  {
+    "file": "PAPATINSENIOR.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "544fc1702c9483f35cb62e76dee3ea695716eae996dccadaf02d136e67d15682"
+  },
+  {
+    "file": "MAMBO.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "5f86c0683c5ba7782817ded2ea4047f873524093cf6555d914567d1c6158a49f"
+  },
+  {
+    "file": "CRYON.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "18a7df5b96ea6d7d25b501c0a70521afc0324c95ce95ada0a7331f1cb15f09a8"
+  },
+  {
+    "file": "CITOPA.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "e8ce1f5e187550119db65e99887d22f01839fdd0e77ac68c32e6cacd04fe0095"
+  },
+  {
+    "file": "VERDANTIS.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "056e6a8ef3d1b9b794639d4470d6b22e96e7febda0323a945984f3150d76f6af"
+  },
+  {
+    "file": "NYX.png",
+    "status": "PASS",
+    "width": 1440,
+    "height": 900,
+    "sha256": "17fe80b0e693a4b7dea1e3fc230b43d1b4eed2c9e84cb16884079adb5eec23cd"
+  }
+]

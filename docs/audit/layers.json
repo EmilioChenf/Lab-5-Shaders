@@ -1,0 +1,180 @@
+{
+  "status": "PASS",
+  "method": "four leave-one-out renders against all-layers baseline; fixed time=3; HUD excluded",
+  "shader_source_commit": "3b521d499d6a58c23dc060bf86caaa21ac10f5c4",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "mesa_gl_override": "2.1",
+  "mesa_glsl_override": "120",
+  "production_matches_all_layers": true,
+  "fresh_png_count": 35,
+  "results": [
+    {
+      "body": "PAPATIN",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 255235,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATIN",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 30594,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATIN",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 74471,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATIN",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 156027,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATINSENIOR",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 68239,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATINSENIOR",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 64418,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATINSENIOR",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 34545,
+      "status": "PASS"
+    },
+    {
+      "body": "PAPATINSENIOR",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 13012,
+      "status": "PASS"
+    },
+    {
+      "body": "MAMBO",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 68511,
+      "status": "PASS"
+    },
+    {
+      "body": "MAMBO",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 24079,
+      "status": "PASS"
+    },
+    {
+      "body": "MAMBO",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 809,
+      "status": "PASS"
+    },
+    {
+      "body": "MAMBO",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 68808,
+      "status": "PASS"
+    },
+    {
+      "body": "CRYON",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 78834,
+      "status": "PASS"
+    },
+    {
+      "body": "CRYON",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 82924,
+      "status": "PASS"
+    },
+    {
+      "body": "CRYON",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 24435,
+      "status": "PASS"
+    },
+    {
+      "body": "CRYON",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 91673,
+      "status": "PASS"
+    },
+    {
+      "body": "CITOPA",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 119743,
+      "status": "PASS"
+    },
+    {
+      "body": "CITOPA",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 66265,
+      "status": "PASS"
+    },
+    {
+      "body": "CITOPA",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 16993,
+      "status": "PASS"
+    },
+    {
+      "body": "CITOPA",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 73880,
+      "status": "PASS"
+    },
+    {
+      "body": "VERDANTIS",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 74267,
+      "status": "PASS"
+    },
+    {
+      "body": "VERDANTIS",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 73911,
+      "status": "PASS"
+    },
+    {
+      "body": "VERDANTIS",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 10654,
+      "status": "PASS"
+    },
+    {
+      "body": "VERDANTIS",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 23247,
+      "status": "PASS"
+    },
+    {
+      "body": "NYX",
+      "omitted_layer": 1,
+      "changed_pixels_rgb_gt_1": 50555,
+      "status": "PASS"
+    },
+    {
+      "body": "NYX",
+      "omitted_layer": 2,
+      "changed_pixels_rgb_gt_1": 50534,
+      "status": "PASS"
+    },
+    {
+      "body": "NYX",
+      "omitted_layer": 3,
+      "changed_pixels_rgb_gt_1": 1773,
+      "status": "PASS"
+    },
+    {
+      "body": "NYX",
+      "omitted_layer": 4,
+      "changed_pixels_rgb_gt_1": 2435,
+      "status": "PASS"
+    }
+  ]
+}
