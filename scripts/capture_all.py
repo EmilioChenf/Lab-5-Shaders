@@ -30,8 +30,8 @@ def main():
                 raise RuntimeError(f"PNG o resolución incorrecta: {path}")
             # Exclude HUD; a real body must occupy part of the central viewport.
             center = image.convert("RGB").crop((image.width//4, image.height//4, image.width*3//4, image.height*3//4))
-            colors = center.getdata()
-            bright = sum(max(pixel) > 70 for pixel in colors)
+            pixels = center.tobytes()
+            bright = sum(max(pixels[i:i+3]) > 70 for i in range(0, len(pixels), 3))
             if bright < center.width * center.height // 100:
                 raise RuntimeError(f"Superficie ausente o imagen vacía: {path}")
             digest = hashlib.sha256(center.tobytes()).hexdigest()

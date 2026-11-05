@@ -1,6 +1,9 @@
 # Lab-5-Shaders
 
 Atlas de mundos procedurales — Laboratorio 5 de gráficos por computadora.
+
+**Estudiante:** Emilio Chen · **GitHub:** EmilioChenf · **Correo académico:** che24841@uvg.edu.gt
+
 Seis cuerpos principales, una luna y anillos independientes, generados con Rust,
 geometría matemática y shaders GLSL. **No hay texturas de imágenes ni mapas de
 color en las superficies.**
@@ -62,11 +65,11 @@ cuerpo. Cada fila describe cuatro contribuciones que modifican el color final:
 
 | Cuerpo | Capa 1 | Capa 2 | Capa 3 | Capa 4 |
 |---|---|---|---|---|
-| **HELIOS** | Células de plasma amarillo/naranja | Manchas solares oscuras por máscara fBM | Filamentos calientes | Borde incandescente con intensidad pulsante |
-| **IGNIS** | Basalto oscuro con variación mineral | Ceniza y grano superficial | Grietas rojas de lava mediante isocontornos fBM | Bolsas naranjas de incandescencia animada |
-| **AURELION** | Bandas crema y marrones | Cinturones ocres turbulentos | Gran tormenta oval rojiza con remolinos concéntricos | Nubes finas por ruido de alta frecuencia |
+| **PAPATIN** | Células de plasma amarillo/naranja | Manchas solares oscuras por máscara fBM | Filamentos calientes | Borde incandescente con intensidad pulsante |
+| **PAPATINSENIOR** | Basalto oscuro con variación mineral | Ceniza y grano superficial | Grietas rojas de lava mediante isocontornos fBM | Bolsas naranjas de incandescencia animada |
+| **MAMBO** | Bandas crema y marrones | Cinturones ocres turbulentos | Gran tormenta oval rojiza con remolinos concéntricos | Nubes finas por ruido de alta frecuencia |
 | **CRYON** | Glaciares azules | Nieve blanca y casquetes | Fracturas oscuras | Brillos de hielo y borde azulado |
-| **NYX** | Terreno oscuro violeta | Nebulosas energéticas animadas | Venas eléctricas cian | Halo azul en el limbo |
+| **CITOPA** | Terreno oscuro violeta | Nebulosas energéticas animadas | Venas eléctricas cian | Halo azul en el limbo |
 | **VERDANTIS** | Océanos turquesa | Continentes verdes | Cordilleras minerales | Nubes blancas en movimiento |
 
 Las posiciones locales llegan del vertex shader sin rotar: los detalles se
@@ -74,31 +77,31 @@ mantienen pegados a la superficie mientras `Spin` rota su geometría. Las normal
 se rotan con el mismo ángulo. `Center`, `Radius` y `Tilt` colocan cada objeto;
 `Time` anima patrones y rotaciones, y `Eye` permite calcular el borde luminoso.
 Los cuerpos no emisivos reciben iluminación direccional coherente con ambiente;
-Helios es emisivo e Ignis/Nyx mezclan emisión según sus máscaras. No es una
-simulación física de iluminación desde la posición de Helios ni un efecto bloom.
+Papatin es emisivo y Papatinsenior/Citopa mezclan emisión según sus máscaras. No es una
+simulación física de iluminación desde la posición de Papatin ni un efecto bloom.
 
 ## Anillos y luna
 
-**Aurelion** tiene una malla anular separada, radios locales 1.35–2.15 e inclinación
+**Mambo** tiene una malla anular separada, radios locales 1.35–2.15 e inclinación
 0.38 radianes. Su fragment shader usa únicamente distancia radial para bandas
 minerales y huecos. Los huecos finos se recortan con `discard`; el agujero central
 es geometría real. Depth testing y escritura de profundidad producen oclusión
-correcta con el planeta. El anillo conserva la orientación respecto a Aurelion.
+correcta con el planeta. El anillo conserva la orientación respecto a Mambo.
 
-**Selene** es otra esfera, de radio 0.29, que orbita Ignis con radio horizontal
+**Nyx** es otra esfera, de radio 0.29, que orbita Papatinsenior con radio horizontal
 1.75 y altura 0.25. Tiene regolito, tierras altas, depresiones y bordes de cráteres
-por ruido y celdas locales. No es una marca dibujada sobre Ignis. La luna y los
+por ruido y celdas locales. No es una marca dibujada sobre Papatinsenior. La luna y los
 anillos se muestran también en las vistas individuales de sus planetas.
 
 Los planetas rotan a velocidades distintas. Se mantiene su distribución en el
-atlas para facilitar la comparación; únicamente Selene se traslada en órbita.
+atlas para facilitar la comparación; únicamente Nyx se traslada en órbita.
 Las escalas y distancias son artísticas, no astronómicas.
 
 ## Controles
 
 | Entrada | Acción |
 |---|---|
-| `1`–`6` | Seleccionar Helios, Ignis, Aurelion, Cryon, Nyx o Verdantis |
+| `1`–`7` | Seleccionar Papatin, Papatinsenior, Mambo, Cryon, Citopa, Verdantis o Nyx |
 | `0` | Volver al atlas |
 | Arrastrar con botón izquierdo | Orbitar alrededor del objetivo |
 | Rueda del mouse | Zoom, limitado para conservar estabilidad |
@@ -108,34 +111,56 @@ Las escalas y distancias son artísticas, no astronómicas.
 | `Escape` | Salir |
 
 La cámara sigue operativa en pausa. La interfaz muestra selección, controles y
-FPS. La vista individual oculta los otros sistemas para inspeccionar el shader.
+FPS. La vista individual oculta los otros sistemas para inspeccionar el shader. La tecla `7` centra la cámara en Nyx mientras sigue su órbita. Mambo tiene un encuadre más amplio para mostrar sus anillos completos.
 
 ## Capturas reales
 
 Se obtuvieron ejecutando el binario release en Xorg/Mesa, sin composiciones ni
-imágenes generadas. Para regenerar las siete vistas automáticamente:
+imágenes generadas. Para regenerar las ocho vistas automáticamente:
 
 ```powershell
 cargo run --release --locked -- --capture-all
 ```
 
-El programa captura atlas y seis cuerpos y termina. F12 guarda
+El programa espera ocho fotogramas por vista, captura el atlas y los siete cuerpos
+y termina. En este modo fija el tiempo de simulación a 3 segundos para obtener
+encuadres estables y reproducibles; el modo interactivo mantiene las animaciones.
+
+Para **compilar, ejecutar y verificar automáticamente** formato PNG, resolución,
+contenido de superficie, imágenes diferentes y actualización de los ocho archivos:
+
+```powershell
+python -m pip install Pillow
+python scripts/capture_all.py
+```
+
+Este verificador necesita Rust en PATH y una sesión gráfica activa; en Linux
+puede utilizarse un servidor X11 virtual con Mesa. Las ocho imágenes de este
+README ya fueron generadas y verificadas: no hay capturas pendientes. F12 guarda
 `docs/screenshots/atlas.png` o `docs/screenshots/NOMBRE.png`, relativo al directorio
 de ejecución; **sobrescribe la imagen anterior de esa vista**. Ejecutar desde la
 raíz para actualizar las evidencias del README. Una carpeta sin permisos de
 escritura puede impedir la captura; usar una ubicación escribible.
 
-| Helios | Ignis y Selene |
+| Papatin | Papatinsenior y Nyx |
 |---|---|
-| ![Helios](docs/screenshots/HELIOS.png) | ![Ignis y Selene](docs/screenshots/IGNIS.png) |
+| ![Papatin](docs/screenshots/PAPATIN.png) | ![Papatinsenior y Nyx](docs/screenshots/PAPATINSENIOR.png) |
 
-| Aurelion y anillos | Cryon |
+| Mambo y anillos | Cryon |
 |---|---|
-| ![Aurelion](docs/screenshots/AURELION.png) | ![Cryon](docs/screenshots/CRYON.png) |
+| ![Mambo](docs/screenshots/MAMBO.png) | ![Cryon](docs/screenshots/CRYON.png) |
 
-| Nyx | Verdantis |
+| Citopa | Verdantis |
 |---|---|
-| ![Nyx](docs/screenshots/NYX.png) | ![Verdantis](docs/screenshots/VERDANTIS.png) |
+| ![Citopa](docs/screenshots/CITOPA.png) | ![Verdantis](docs/screenshots/VERDANTIS.png) |
+
+### Nyx, luna independiente
+
+![Nyx en su vista individual](docs/screenshots/NYX.png)
+
+Su shader combina regolito gris moteado, tierras altas, depresiones oscuras de
+cráter y bordes elevados claros. Conserva la superficie y la órbita de la luna;
+no utiliza los patrones violetas del planeta Citopa.
 
 ## Arquitectura
 
@@ -145,14 +170,15 @@ src/main.rs                Punto de entrada
 src/app.rs                 Ventana, eventos, UI y capturas
 src/camera.rs              Cámara orbital
 src/geometry.rs            Esfera indexada y anillo sin texturas
-src/bodies.rs              Catálogo y órbita de Selene
+src/bodies.rs              Catálogo y órbita de Nyx
 src/shaders.rs             Materiales GLSL y uniformes
 src/render.rs              Renderizado de cuerpos y sistemas seleccionados
 shaders/body.vert          Transformaciones y coordenadas locales
 shaders/body.frag          Ruido y siete composiciones de superficie
 shaders/rings.frag         Bandas y huecos de los anillos
-docs/screenshots/          Siete capturas reales
+docs/screenshots/          Ocho capturas reales
 docs/VALIDATION.md          Evidencias y límites de las pruebas
+scripts/capture_all.py     Compilación, captura y verificación automática
 scripts/check.sh           Validación de Rust en sistemas POSIX
 scripts/validate_input.py  Prueba gráfica opcional de eventos X11
 ```
@@ -173,9 +199,9 @@ cargo clippy --all-targets --locked -- -D warnings
 cargo build --release --locked
 ```
 
-Resultado real: los cinco comandos completaron correctamente, **6 tests
-aprobados, 0 fallidos**, y Clippy sin advertencias. Se ejecutó la aplicación,
-se compilaron los shaders en la GPU Mesa por software y se generaron los siete
+Resultado real: los cinco comandos completaron correctamente, **7 pruebas
+aprobadas, 0 fallidas**, y Clippy sin advertencias. Se ejecutó la aplicación,
+se compilaron los shaders en la GPU Mesa por software y se generaron los ocho
 PNG. La prueba XTest validó selección, F12, pausa/reanudación, arrastre, reset,
 zoom, retorno al atlas y salida. Ver [detalle y limitaciones](docs/VALIDATION.md).
 No se probaron Windows, otras GPU ni redimensionamiento mediante eventos.
@@ -186,12 +212,20 @@ No se probaron Windows, otras GPU ni redimensionamiento mediante eventos.
 |---|---|
 | Creatividad | Seis composiciones diferenciadas; galería real anterior |
 | Cuatro capas por cuerpo principal | Tabla de capas y ramas de `body.frag` |
-| Estrella, rocoso y gaseoso | Helios, Ignis y Aurelion |
-| Tres planetas adicionales | Cryon, Nyx y Verdantis |
-| Anillos | Malla anular y shader independiente de Aurelion |
-| Luna | Esfera Selene y órbita comprobada alrededor de Ignis |
+| Estrella, rocoso y gaseoso | Papatin, Papatinsenior y Mambo |
+| Tres planetas adicionales | Cryon, Citopa y Verdantis |
+| Anillos | Malla anular y shader independiente de Mambo |
+| Luna | Esfera Nyx y órbita comprobada alrededor de Papatinsenior |
 | Interacción y animación | Cámara, selección, rotaciones, tiempo y controles comprobados |
-| Evidencia visual | Atlas y seis vistas individuales capturadas del programa |
+| Evidencia visual | Atlas y siete vistas individuales capturadas del programa |
 
 `target/`, binarios y archivos temporales están excluidos de Git. Las capturas
 PNG se versionan porque son evidencia solicitada, no dependencias del render.
+
+## Identidad e historial Git
+
+Los commits nuevos usan `EmilioChenf <che24841@uvg.edu.gt>` y mensajes en español.
+GitHub asocia los commits según los correos verificados de la cuenta; configurar
+Git localmente no verifica ese correo en GitHub. La revisión de los 19 commits
+anteriores y la estrategia sin pérdida están en [HISTORIAL.md](docs/HISTORIAL.md).
+No se ha reescrito el historial publicado ni usado force push.
