@@ -59,6 +59,16 @@ void main() {
         color=mix(color,vec3(.015,.10,.23),crack*.8);
         color+=vec3(.35,.7,1.)*(pow(detail,8.)*5.+rim*.25);
     }
+    // NYX: obsidian ground, violet nebulae, electric veins, blue limb.
+    else if(Kind<4.5) {
+        float cloud=fbm(p*6.+vec3(0.,Time*.045,0.));
+        float vein=pow(1.-abs(sin(n*35.+Time*.5)),18.);
+        color=mix(vec3(.012,.008,.04),vec3(.18,.025,.32),n);
+        color+=vec3(.32,.07,.55)*smoothstep(.45,.72,cloud);
+        color+=vec3(.15,.65,1.)*vein*.7;
+        color+=vec3(.12,.18,.6)*rim;
+        emission=.6;
+    }
     // BODY_LAYERS
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
