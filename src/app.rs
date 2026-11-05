@@ -142,14 +142,36 @@ pub async fn run() {
         draw_text("1-7 Seleccionar  /  0 Atlas  /  Arrastrar: orbita  /  Rueda: zoom  /  R Reiniciar  /  ESPACIO Pausa  /  F12 Captura",20.,screen_height()-17.,18.,LIGHTGRAY);
         if selected.is_none() {
             for (i, b) in catalog.iter().enumerate() {
+                // Associate the moon with its parent without drawing text over a transit.
+                if i == 6 {
+                    continue;
+                }
+                let label = if i == 1 {
+                    format!("{} + {}", b.name, catalog[6].name)
+                } else {
+                    b.name.to_owned()
+                };
                 let uv = orbit.camera(target).matrix().project_point3(
                     bodies::position(&catalog, i, time) + vec3(0., -b.radius - 0.35, 0.),
                 );
+                let mut label_y = (1. - uv.y) * 0.5 * screen_height();
+                if i == 2 {
+                    // Project the actual outer ring, so its annotation never crosses it.
+                    let matrix = orbit.camera(target).matrix();
+                    for sample in 0..128 {
+                        let angle = sample as f32 / 128. * std::f32::consts::TAU;
+                        let local = vec3(angle.cos(), 0., angle.sin()) * (2.15 * b.radius);
+                        let point =
+                            b.position + Mat4::from_rotation_x(0.38).transform_point3(local);
+                        let projected = matrix.project_point3(point);
+                        label_y = label_y.max((1. - projected.y) * 0.5 * screen_height() + 22.);
+                    }
+                }
                 draw_text(
-                    b.name,
+                    &label,
                     (uv.x + 1.) * 0.5 * screen_width()
-                        - measure_text(b.name, None, 18, 1.).width * 0.5,
-                    (1. - uv.y) * 0.5 * screen_height(),
+                        - measure_text(&label, None, 18, 1.).width * 0.5,
+                    label_y,
                     18.,
                     LIGHTGRAY,
                 );
