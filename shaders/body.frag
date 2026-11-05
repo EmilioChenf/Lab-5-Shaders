@@ -69,7 +69,26 @@ void main() {
         color+=vec3(.12,.18,.6)*rim;
         emission=.6;
     }
-    // BODY_LAYERS
+    // VERDANTIS: turquoise seas, green continents, mountain ranges, moving clouds.
+    else if(Kind<5.5) {
+        float land=smoothstep(.46,.51,n);
+        color=mix(vec3(.015,.22,.36),vec3(.025,.65,.59),detail);
+        color=mix(color,mix(vec3(.04,.19,.055),vec3(.26,.52,.10),detail),land);
+        color=mix(color,vec3(.58,.55,.40),smoothstep(.63,.73,n)*land);
+        float clouds=smoothstep(.57,.72,fbm(p*9.+vec3(Time*.025,0.,0.)));
+        color=mix(color,vec3(.9,.97,1.),clouds*.85);
+        color+=rim*vec3(.015,.18,.22);
+    }
+    // SELENE: mottled regolith, highlands, crater bowls and raised rims.
+    else {
+        vec3 cell=floor(p*18.);
+        float crater=length(fract(p*18.)-.5);
+        float enabled=step(.65,hash(cell));
+        color=mix(vec3(.16,.17,.20),vec3(.55,.53,.49),n);
+        color+=detail*.12;
+        color*=1.-enabled*(1.-smoothstep(.18,.30,crater))*.65;
+        color+=enabled*exp(-pow((crater-.31)*35.,2.))*.18;
+    }
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
 }
