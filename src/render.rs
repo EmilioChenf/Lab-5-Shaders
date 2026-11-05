@@ -21,25 +21,19 @@ impl Renderer {
         material.set_uniform("Spin", spin);
         material.set_uniform("Tilt", tilt);
     }
-    pub fn draw(&self, catalog: &[bodies::Body; 6], time: f32, eye: Vec3, selected: Option<usize>) {
+    pub fn draw(&self, catalog: &[bodies::Body; 7], time: f32, eye: Vec3, selected: Option<usize>) {
         self.body.set_uniform("Time", time);
         self.body.set_uniform("Eye", eye);
         for (i, b) in catalog.iter().enumerate() {
-            if selected.is_some_and(|index| index != i) {
+            if selected.is_some_and(|index| index != i && !(index == 1 && i == 6)) {
                 continue;
             }
             self.body.set_uniform("Kind", i as f32);
-            Self::place(&self.body, b.position, b.radius, time * b.speed, 0.);
-            gl_use_material(&self.body);
-            draw_mesh(&self.sphere);
-        }
-        if selected.is_none() || selected == Some(1) {
-            self.body.set_uniform("Kind", 6.0_f32);
             Self::place(
                 &self.body,
-                bodies::moon_position(catalog[1].position, time),
-                0.29,
-                time * 0.2,
+                bodies::position(catalog, i, time),
+                b.radius,
+                time * b.speed,
                 0.,
             );
             gl_use_material(&self.body);

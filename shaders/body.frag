@@ -19,7 +19,7 @@ void main() {
     float rim=pow(1.-max(dot(normalize(normalWorld),normalize(Eye-world)),0.),3.);
     vec3 color=vec3(.5);
     float emission=0.;
-    // HELIOS: convective cells, dark sunspots, hot filaments, pulsing corona.
+    // PAPATIN: convective cells, dark sunspots, hot filaments, pulsing corona.
     if(Kind<.5) {
         float plasma=fbm(p*8.+vec3(Time*.13,0.,Time*.07));
         float spots=smoothstep(.60,.74,fbm(p*13.+Time*.025));
@@ -30,7 +30,7 @@ void main() {
         color+=rim*vec3(1.,.6,.18)*(.6+.2*sin(Time*2.));
         emission=1.;
     }
-    // IGNIS: basalt, ash patches, lava seams, incandescent pockets.
+    // PAPATINSENIOR: basalt, ash patches, lava seams, incandescent pockets.
     else if(Kind<1.5) {
         float cracks=1.-smoothstep(.015,.07,abs(fbm(p*8.)-.49));
         float hot=smoothstep(.58,.75,detail+sin(Time+p.y*9.)*.035);
@@ -40,7 +40,7 @@ void main() {
         color+=vec3(1.,.48,.015)*hot*.8;
         emission=max(cracks,hot)*.9;
     }
-    // AURELION: cream bands, turbulent ochre belts, oval storm, fine clouds.
+    // MAMBO: cream bands, turbulent ochre belts, oval storm, fine clouds.
     else if(Kind<2.5) {
         float bands=sin(p.y*40.+fbm(p*9.+Time*.018)*5.);
         color=mix(vec3(.32,.14,.07),vec3(.95,.80,.51),bands*.5+.5);
@@ -59,7 +59,7 @@ void main() {
         color=mix(color,vec3(.015,.10,.23),crack*.8);
         color+=vec3(.35,.7,1.)*(pow(detail,8.)*5.+rim*.25);
     }
-    // NYX: obsidian ground, violet nebulae, electric veins, blue limb.
+    // CITOPA: obsidian ground, violet nebulae, electric veins, blue limb.
     else if(Kind<4.5) {
         float cloud=fbm(p*6.+vec3(0.,Time*.045,0.));
         float vein=pow(1.-abs(sin(n*35.+Time*.5)),18.);
@@ -79,7 +79,7 @@ void main() {
         color=mix(color,vec3(.9,.97,1.),clouds*.85);
         color+=rim*vec3(.015,.18,.22);
     }
-    // SELENE: mottled regolith, highlands, crater bowls and raised rims.
+    // NYX: mottled regolith, highlands, crater bowls and raised rims.
     else {
         vec3 cell=floor(p*18.);
         float crater=length(fract(p*18.)-.5);

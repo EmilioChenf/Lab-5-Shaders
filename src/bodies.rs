@@ -5,22 +5,22 @@ pub struct Body {
     pub radius: f32,
     pub speed: f32,
 }
-pub fn catalog() -> [Body; 6] {
+pub fn catalog() -> [Body; 7] {
     [
         Body {
-            name: "HELIOS",
+            name: "PAPATIN",
             position: vec3(-7., 1.8, 0.),
             radius: 1.65,
             speed: 0.12,
         },
         Body {
-            name: "IGNIS",
+            name: "PAPATINSENIOR",
             position: vec3(-2.6, 1.8, 0.),
             radius: 1.,
             speed: 0.23,
         },
         Body {
-            name: "AURELION",
+            name: "MAMBO",
             position: vec3(3.1, 1.8, 0.),
             radius: 1.35,
             speed: 0.16,
@@ -32,7 +32,7 @@ pub fn catalog() -> [Body; 6] {
             speed: 0.19,
         },
         Body {
-            name: "NYX",
+            name: "CITOPA",
             position: vec3(-1., -2.3, 0.),
             radius: 1.15,
             speed: 0.14,
@@ -43,7 +43,29 @@ pub fn catalog() -> [Body; 6] {
             radius: 1.2,
             speed: 0.21,
         },
+        Body {
+            name: "NYX",
+            position: vec3(-2.6, 2.05, 1.75),
+            radius: 0.29,
+            speed: 0.2,
+        },
     ]
+}
+/// Nyx is independent geometry and follows its parent; all other centers stay fixed.
+pub fn position(catalog: &[Body; 7], index: usize, time: f32) -> Vec3 {
+    if index == 6 {
+        moon_position(catalog[1].position, time)
+    } else {
+        catalog[index].position
+    }
+}
+pub fn focus_distance(selected: Option<usize>) -> f32 {
+    match selected {
+        None => 20.,
+        Some(2) => 8.,
+        Some(6) => 2.5,
+        Some(_) => 6.5,
+    }
 }
 pub fn moon_position(parent: Vec3, time: f32) -> Vec3 {
     parent + vec3((time * 0.45).cos() * 1.75, 0.25, (time * 0.45).sin() * 1.75)
@@ -65,7 +87,36 @@ mod tests {
         assert!(moon_position(parent, 0.).distance(moon_position(parent, 2.)) > 0.5);
     }
     #[test]
-    fn catalog_has_six_distinct_worlds() {
+    fn moon_selection_tracks_orbit_and_has_own_framing() {
+        let bodies = catalog();
+        for time in [0., 1., 8., 20.] {
+            assert_eq!(
+                position(&bodies, 6, time),
+                moon_position(bodies[1].position, time)
+            );
+            for i in 0..6 {
+                assert_eq!(position(&bodies, i, time), bodies[i].position);
+            }
+        }
+        assert_eq!(focus_distance(None), 20.);
+        assert!(focus_distance(Some(2)) > focus_distance(Some(1)));
+        assert!(focus_distance(Some(6)) < focus_distance(Some(1)));
+    }
+    #[test]
+    fn catalog_has_seven_distinct_bodies() {
+        let bodies = catalog();
+        assert_eq!(
+            bodies.map(|b| b.name),
+            [
+                "PAPATIN",
+                "PAPATINSENIOR",
+                "MAMBO",
+                "CRYON",
+                "CITOPA",
+                "VERDANTIS",
+                "NYX"
+            ]
+        );
         let bodies = catalog();
         for (i, a) in bodies.iter().enumerate() {
             assert!(a.radius > 0. && a.speed > 0.);

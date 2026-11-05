@@ -35,11 +35,12 @@ pub async fn run() {
             KeyCode::Key4,
             KeyCode::Key5,
             KeyCode::Key6,
+            KeyCode::Key7,
         ];
         for (i, key) in keys.iter().enumerate() {
             if is_key_pressed(*key) {
                 selected = Some(i);
-                orbit = Orbit::new(6.5);
+                orbit = Orbit::new(bodies::focus_distance(selected));
             }
         }
         if is_key_pressed(KeyCode::Key0) {
@@ -47,7 +48,7 @@ pub async fn run() {
             orbit = Orbit::new(20.);
         }
         if is_key_pressed(KeyCode::R) {
-            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 20. });
+            orbit = Orbit::new(bodies::focus_distance(selected));
         }
         if is_key_pressed(KeyCode::Space) {
             paused = !paused;
@@ -57,15 +58,19 @@ pub async fn run() {
             selected = if view == 0 {
                 None
             } else {
-                Some((view - 1).min(5))
+                Some((view - 1).min(6))
             };
-            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 20. });
+            orbit = Orbit::new(bodies::focus_distance(selected));
         }
-        orbit.update();
-        if !paused {
+        if !automatic {
+            orbit.update();
+        }
+        if automatic {
+            time = 3.0;
+        } else if !paused {
             time += get_frame_time().min(0.1);
         }
-        let target = selected.map_or(vec3(-0.8, 0., 0.), |i| catalog[i].position);
+        let target = selected.map_or(vec3(-0.8, 0., 0.), |i| bodies::position(&catalog, i, time));
         clear_background(Color::from_rgba(5, 8, 19, 255));
         // Deterministic geometry-only starfield, independent of surface shaders.
         for i in 0..180 {
@@ -89,7 +94,7 @@ pub async fn run() {
             28.,
             Color::from_rgba(240, 196, 112, 255),
         );
-        let name = selected.map_or("SEIS MUNDOS PROCEDURALES", |i| catalog[i].name);
+        let name = selected.map_or("SIETE CUERPOS PROCEDURALES", |i| catalog[i].name);
         draw_text(name, 28., 64., 22., WHITE);
         draw_text(
             format!(
@@ -109,16 +114,16 @@ pub async fn run() {
             44.,
             Color::from_rgba(5, 8, 19, 235),
         );
-        draw_text("1-6 Seleccionar  /  0 Atlas  /  Arrastrar: orbita  /  Rueda: zoom  /  R Reiniciar  /  ESPACIO Pausa  /  F12 Captura",20.,screen_height()-17.,18.,LIGHTGRAY);
+        draw_text("1-7 Seleccionar  /  0 Atlas  /  Arrastrar: orbita  /  Rueda: zoom  /  R Reiniciar  /  ESPACIO Pausa  /  F12 Captura",20.,screen_height()-17.,18.,LIGHTGRAY);
         if selected.is_none() {
-            for b in &catalog {
-                let uv = orbit
-                    .camera(target)
-                    .matrix()
-                    .project_point3(b.position + vec3(0., -b.radius - 0.35, 0.));
+            for (i, b) in catalog.iter().enumerate() {
+                let uv = orbit.camera(target).matrix().project_point3(
+                    bodies::position(&catalog, i, time) + vec3(0., -b.radius - 0.35, 0.),
+                );
                 draw_text(
                     b.name,
-                    (uv.x + 1.) * 0.5 * screen_width() - 35.,
+                    (uv.x + 1.) * 0.5 * screen_width()
+                        - measure_text(b.name, None, 18, 1.).width * 0.5,
                     (1. - uv.y) * 0.5 * screen_height(),
                     18.,
                     LIGHTGRAY,
@@ -134,7 +139,7 @@ pub async fn run() {
             }
         }
         frame += 1;
-        if automatic && frame >= 56 {
+        if automatic && frame >= 64 {
             break;
         }
         next_frame().await;
