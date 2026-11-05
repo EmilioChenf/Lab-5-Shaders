@@ -30,6 +30,16 @@ void main() {
         color+=rim*vec3(1.,.6,.18)*(.6+.2*sin(Time*2.));
         emission=1.;
     }
+    // IGNIS: basalt, ash patches, lava seams, incandescent pockets.
+    else if(Kind<1.5) {
+        float cracks=1.-smoothstep(.015,.07,abs(fbm(p*8.)-.49));
+        float hot=smoothstep(.58,.75,detail+sin(Time+p.y*9.)*.035);
+        color=mix(vec3(.025,.018,.025),vec3(.18,.09,.055),n);
+        color+=vec3(.12,.10,.09)*detail;
+        color=mix(color,vec3(1.,.19,.005),cracks*.95);
+        color+=vec3(1.,.48,.015)*hot*.8;
+        emission=max(cracks,hot)*.9;
+    }
     // BODY_LAYERS
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
