@@ -50,6 +50,15 @@ void main() {
         color=mix(color,vec3(.65,.16,.065)+.15*sin(length(q)*95.+n*12.),storm);
         color+=vec3(.16,.13,.09)*detail;
     }
+    // CRYON: blue glaciers, white snow caps, dark fractures, sparkling ice.
+    else if(Kind<3.5) {
+        color=mix(vec3(.025,.19,.42),vec3(.35,.75,.92),n);
+        float snow=smoothstep(.48,.65,n+abs(p.y)*.2);
+        color=mix(color,vec3(.87,.96,1.),snow);
+        float crack=1.-smoothstep(.01,.035,abs(fbm(p*16.)-.5));
+        color=mix(color,vec3(.015,.10,.23),crack*.8);
+        color+=vec3(.35,.7,1.)*(pow(detail,8.)*5.+rim*.25);
+    }
     // BODY_LAYERS
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
