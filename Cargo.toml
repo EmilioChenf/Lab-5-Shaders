@@ -1,0 +1,8 @@
+[package]
+name = "lab-5-shaders"
+version = "0.1.0"
+edition = "2021"
+description = "Atlas procedural de seis mundos en Rust y GLSL"
+
+[dependencies]
+macroquad = "0.4.14"
