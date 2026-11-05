@@ -1,1 +1,197 @@
 # Lab-5-Shaders
+
+Atlas de mundos procedurales — Laboratorio 5 de gráficos por computadora.
+Seis cuerpos principales, una luna y anillos independientes, generados con Rust,
+geometría matemática y shaders GLSL. **No hay texturas de imágenes ni mapas de
+color en las superficies.**
+
+![Vista general real del atlas](docs/screenshots/atlas.png)
+
+## Tecnologías y compatibilidad
+
+- Rust 2021, Cargo y Macroquad 0.4.16, fijado con `Cargo.lock`.
+- Macroquad/Miniquad proporciona ventana, entrada, GPU y cámara. Se escogió como
+  alternativa a Raylib para evitar una instalación nativa adicional y mantener
+  el proyecto pequeño y portable. No se utiliza Raylib ni Blender.
+- Backend OpenGL de escritorio, shaders `#version 100` (GLSL ES 1.00 aceptado por
+  el contexto de compatibilidad del backend). Requiere un controlador compatible
+  con OpenGL 2.1 o superior y soporte de estos shaders; no apunta a un contexto
+  exclusivamente core 3.3. Los shaders se compilaron realmente en Mesa/Linux.
+- Fuente del shader embebida con `include_str!`: el ejecutable no necesita buscar
+  archivos GLSL relativos a su ubicación. Los PNG de `docs/` no son recursos de
+  ejecución. La fuente de la interfaz la proporciona Macroquad.
+
+## Instalación y ejecución en Windows
+
+Instalar Rust desde <https://rustup.rs/> y Visual Studio Build Tools 2022 con
+**Desktop development with C++**, MSVC y Windows SDK. Alternativamente, desde
+PowerShell con `winget`:
+
+```powershell
+winget install --id Rustlang.Rustup --exact
+winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --override "--wait --passive --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+```
+
+Abrir una nueva terminal después de instalar. Usar el checkout existente; si
+no existe en la máquina, clonarlo una sola vez:
+
+```powershell
+git clone https://github.com/EmilioChenf/Lab-5-Shaders.git
+cd Lab-5-Shaders
+rustup default stable-msvc
+rustup component add rustfmt clippy
+cargo build --release --locked
+cargo run --release --locked
+```
+
+Si ya se está dentro del repositorio, comenzar directamente con `rustup` y
+`cargo`. También se puede ejecutar `target\release\lab-5-shaders.exe`.
+La ventana inicial mide 1440×900 y permite cambiar su tamaño. Se recomienda
+1280×720 o más. **Windows no se ejecutó en esta sesión**: la validación real se
+hizo en Linux; estos son los pasos de instalación para el backend Windows de
+Macroquad, no una afirmación de prueba en Windows.
+
+En Linux se necesita Rust, un compilador/enlazador C, X11 y un controlador OpenGL.
+Con esas herramientas instaladas se usan los mismos comandos `cargo`.
+
+## Los seis cuerpos y sus capas
+
+`shaders/body.frag` contiene una biblioteca común de hash, value noise trilineal
+y fBM de cinco octavas. `Kind` selecciona una composición distinta para cada
+cuerpo. Cada fila describe cuatro contribuciones que modifican el color final:
+
+| Cuerpo | Capa 1 | Capa 2 | Capa 3 | Capa 4 |
+|---|---|---|---|---|
+| **HELIOS** | Células de plasma amarillo/naranja | Manchas solares oscuras por máscara fBM | Filamentos calientes | Borde incandescente con intensidad pulsante |
+| **IGNIS** | Basalto oscuro con variación mineral | Ceniza y grano superficial | Grietas rojas de lava mediante isocontornos fBM | Bolsas naranjas de incandescencia animada |
+| **AURELION** | Bandas crema y marrones | Cinturones ocres turbulentos | Gran tormenta oval rojiza con remolinos concéntricos | Nubes finas por ruido de alta frecuencia |
+| **CRYON** | Glaciares azules | Nieve blanca y casquetes | Fracturas oscuras | Brillos de hielo y borde azulado |
+| **NYX** | Terreno oscuro violeta | Nebulosas energéticas animadas | Venas eléctricas cian | Halo azul en el limbo |
+| **VERDANTIS** | Océanos turquesa | Continentes verdes | Cordilleras minerales | Nubes blancas en movimiento |
+
+Las posiciones locales llegan del vertex shader sin rotar: los detalles se
+mantienen pegados a la superficie mientras `Spin` rota su geometría. Las normales
+se rotan con el mismo ángulo. `Center`, `Radius` y `Tilt` colocan cada objeto;
+`Time` anima patrones y rotaciones, y `Eye` permite calcular el borde luminoso.
+Los cuerpos no emisivos reciben iluminación direccional coherente con ambiente;
+Helios es emisivo e Ignis/Nyx mezclan emisión según sus máscaras. No es una
+simulación física de iluminación desde la posición de Helios ni un efecto bloom.
+
+## Anillos y luna
+
+**Aurelion** tiene una malla anular separada, radios locales 1.35–2.15 e inclinación
+0.38 radianes. Su fragment shader usa únicamente distancia radial para bandas
+minerales y huecos. Los huecos finos se recortan con `discard`; el agujero central
+es geometría real. Depth testing y escritura de profundidad producen oclusión
+correcta con el planeta. El anillo conserva la orientación respecto a Aurelion.
+
+**Selene** es otra esfera, de radio 0.29, que orbita Ignis con radio horizontal
+1.75 y altura 0.25. Tiene regolito, tierras altas, depresiones y bordes de cráteres
+por ruido y celdas locales. No es una marca dibujada sobre Ignis. La luna y los
+anillos se muestran también en las vistas individuales de sus planetas.
+
+Los planetas rotan a velocidades distintas. Se mantiene su distribución en el
+atlas para facilitar la comparación; únicamente Selene se traslada en órbita.
+Las escalas y distancias son artísticas, no astronómicas.
+
+## Controles
+
+| Entrada | Acción |
+|---|---|
+| `1`–`6` | Seleccionar Helios, Ignis, Aurelion, Cryon, Nyx o Verdantis |
+| `0` | Volver al atlas |
+| Arrastrar con botón izquierdo | Orbitar alrededor del objetivo |
+| Rueda del mouse | Zoom, limitado para conservar estabilidad |
+| `R` | Restablecer la cámara de la vista actual |
+| `Espacio` | Pausar/reanudar rotaciones, órbita y tiempo de shaders |
+| `F12` | Guardar captura PNG de la vista actual |
+| `Escape` | Salir |
+
+La cámara sigue operativa en pausa. La interfaz muestra selección, controles y
+FPS. La vista individual oculta los otros sistemas para inspeccionar el shader.
+
+## Capturas reales
+
+Se obtuvieron ejecutando el binario release en Xorg/Mesa, sin composiciones ni
+imágenes generadas. Para regenerar las siete vistas automáticamente:
+
+```powershell
+cargo run --release --locked -- --capture-all
+```
+
+El programa captura atlas y seis cuerpos y termina. F12 guarda
+`docs/screenshots/atlas.png` o `docs/screenshots/NOMBRE.png`, relativo al directorio
+de ejecución; **sobrescribe la imagen anterior de esa vista**. Ejecutar desde la
+raíz para actualizar las evidencias del README. Una carpeta sin permisos de
+escritura puede impedir la captura; usar una ubicación escribible.
+
+| Helios | Ignis y Selene |
+|---|---|
+| ![Helios](docs/screenshots/HELIOS.png) | ![Ignis y Selene](docs/screenshots/IGNIS.png) |
+
+| Aurelion y anillos | Cryon |
+|---|---|
+| ![Aurelion](docs/screenshots/AURELION.png) | ![Cryon](docs/screenshots/CRYON.png) |
+
+| Nyx | Verdantis |
+|---|---|
+| ![Nyx](docs/screenshots/NYX.png) | ![Verdantis](docs/screenshots/VERDANTIS.png) |
+
+## Arquitectura
+
+```text
+Cargo.toml / Cargo.lock     Dependencias reproducibles
+src/main.rs                Punto de entrada
+src/app.rs                 Ventana, eventos, UI y capturas
+src/camera.rs              Cámara orbital
+src/geometry.rs            Esfera indexada y anillo sin texturas
+src/bodies.rs              Catálogo y órbita de Selene
+src/shaders.rs             Materiales GLSL y uniformes
+src/render.rs              Renderizado de cuerpos y sistemas seleccionados
+shaders/body.vert          Transformaciones y coordenadas locales
+shaders/body.frag          Ruido y siete composiciones de superficie
+shaders/rings.frag         Bandas y huecos de los anillos
+docs/screenshots/          Siete capturas reales
+docs/VALIDATION.md          Evidencias y límites de las pruebas
+scripts/check.sh           Validación de Rust en sistemas POSIX
+scripts/validate_input.py  Prueba gráfica opcional de eventos X11
+```
+
+La esfera tiene 96×64 segmentos, normales analíticas y 36 864 índices; el búfer de
+índices se amplía a 40 000 para evitar truncamiento. Los radios se escalan de
+forma uniforme, por lo que las normales pueden normalizarse después de rotar.
+Las texturas de superficie de `Mesh` son `None`. El renderer establece todos los
+uniformes por objeto antes de dibujar y vuelve al material por defecto para UI.
+
+## Pruebas y resultados
+
+```powershell
+cargo fmt --check
+cargo check --locked
+cargo test --locked
+cargo clippy --all-targets --locked -- -D warnings
+cargo build --release --locked
+```
+
+Resultado real: los cinco comandos completaron correctamente, **6 tests
+aprobados, 0 fallidos**, y Clippy sin advertencias. Se ejecutó la aplicación,
+se compilaron los shaders en la GPU Mesa por software y se generaron los siete
+PNG. La prueba XTest validó selección, F12, pausa/reanudación, arrastre, reset,
+zoom, retorno al atlas y salida. Ver [detalle y limitaciones](docs/VALIDATION.md).
+No se probaron Windows, otras GPU ni redimensionamiento mediante eventos.
+
+## Evidencia de la rúbrica
+
+| Criterio | Implementación y evidencia |
+|---|---|
+| Creatividad | Seis composiciones diferenciadas; galería real anterior |
+| Cuatro capas por cuerpo principal | Tabla de capas y ramas de `body.frag` |
+| Estrella, rocoso y gaseoso | Helios, Ignis y Aurelion |
+| Tres planetas adicionales | Cryon, Nyx y Verdantis |
+| Anillos | Malla anular y shader independiente de Aurelion |
+| Luna | Esfera Selene y órbita comprobada alrededor de Ignis |
+| Interacción y animación | Cámara, selección, rotaciones, tiempo y controles comprobados |
+| Evidencia visual | Atlas y seis vistas individuales capturadas del programa |
+
+`target/`, binarios y archivos temporales están excluidos de Git. Las capturas
+PNG se versionan porque son evidencia solicitada, no dependencias del render.
