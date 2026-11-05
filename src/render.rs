@@ -44,6 +44,8 @@ impl Renderer {
             );
             gl_use_material(&self.body);
             draw_mesh(&self.sphere);
+        }
+        if selected.is_none() || selected == Some(2) {
             Self::place(&self.ring, catalog[2].position, catalog[2].radius, 0., 0.38);
             gl_use_material(&self.ring);
             draw_mesh(&self.annulus);
