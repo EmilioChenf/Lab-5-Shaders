@@ -40,6 +40,16 @@ void main() {
         color+=vec3(1.,.48,.015)*hot*.8;
         emission=max(cracks,hot)*.9;
     }
+    // AURELION: cream bands, turbulent ochre belts, oval storm, fine clouds.
+    else if(Kind<2.5) {
+        float bands=sin(p.y*40.+fbm(p*9.+Time*.018)*5.);
+        color=mix(vec3(.32,.14,.07),vec3(.95,.80,.51),bands*.5+.5);
+        color=mix(color,vec3(.76,.43,.16),smoothstep(.5,.7,n)*.6);
+        vec2 q=vec2(p.x-.35,(p.y+.22)*2.5);
+        float storm=(1.-smoothstep(.12,.25,length(q)))*smoothstep(.25,.7,p.z);
+        color=mix(color,vec3(.65,.16,.065)+.15*sin(length(q)*95.+n*12.),storm);
+        color+=vec3(.16,.13,.09)*detail;
+    }
     // BODY_LAYERS
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
