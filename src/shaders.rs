@@ -10,3 +10,13 @@ pub fn body() -> Result<Material, macroquad::Error> {
         ..Default::default()
     })
 }
+pub fn rings() -> Result<Material, macroquad::Error> {
+    load_material(ShaderSource::Glsl {
+        vertex: include_str!("../shaders/body.vert"),
+        fragment: include_str!("../shaders/rings.frag"),
+    }, MaterialParams {
+        pipeline_params: PipelineParams { depth_test: Comparison::LessOrEqual, depth_write: true, ..Default::default() },
+        uniforms: vec![UniformDesc::new("Spin",UniformType::Float1)],
+        ..Default::default()
+    })
+}
