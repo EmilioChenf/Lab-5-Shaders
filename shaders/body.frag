@@ -19,6 +19,17 @@ void main() {
     float rim=pow(1.-max(dot(normalize(normalWorld),normalize(Eye-world)),0.),3.);
     vec3 color=vec3(.5);
     float emission=0.;
+    // HELIOS: convective cells, dark sunspots, hot filaments, pulsing corona.
+    if(Kind<.5) {
+        float plasma=fbm(p*8.+vec3(Time*.13,0.,Time*.07));
+        float spots=smoothstep(.60,.74,fbm(p*13.+Time*.025));
+        float filaments=pow(1.-abs(sin((plasma+p.y)*22.)),7.);
+        color=mix(vec3(.95,.12,.015),vec3(1.,.8,.16),plasma);
+        color=mix(color,vec3(.12,.025,.008),spots*.9);
+        color+=vec3(1.,.55,.12)*filaments*.45;
+        color+=rim*vec3(1.,.6,.18)*(.6+.2*sin(Time*2.));
+        emission=1.;
+    }
     // BODY_LAYERS
     float light=.23+.77*max(dot(normalize(normalWorld),normalize(vec3(-.5,.8,1.))),0.);
     gl_FragColor=vec4(color*mix(light,1.,emission),1.);
