@@ -37,10 +37,10 @@ try:
   key('F12');time.sleep(.25)
   assert path.stat().st_mtime_ns>old
   return Image.open(path).convert('RGB').crop((300,120,1140,800))
- for i,name in enumerate(['HELIOS','IGNIS','AURELION','CRYON','NYX','VERDANTIS'],1):
+ for i,name in enumerate(['PAPATIN','PAPATINSENIOR','MAMBO','CRYON','CITOPA','VERDANTIS','NYX'],1):
   key(str(i));shot(name)
- print('PASS: keys 1-6 select correct screenshot names; F12 writes new frames',flush=True)
- key('space');a=shot('VERDANTIS');time.sleep(.4);b=shot('VERDANTIS')
+ print('PASS: keys 1-7 select correct screenshot names; F12 writes new frames',flush=True)
+ key('6');key('space');a=shot('VERDANTIS');time.sleep(.4);b=shot('VERDANTIS')
  assert ImageChops.difference(a,b).getbbox() is None
  key('space');time.sleep(.4);b=shot('VERDANTIS')
  assert ImageChops.difference(a,b).getbbox() is not None
