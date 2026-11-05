@@ -1,10 +1,17 @@
 //! Shader sources are embedded: binaries never depend on the current working directory.
 use macroquad::prelude::*;
 pub fn body() -> Result<Material, macroquad::Error> {
+    body_source(include_str!("../shaders/body.frag"))
+}
+/// Negative GPU test: the same fallible loader must reject malformed GLSL.
+pub fn rejects_invalid_shader() -> bool {
+    body_source("#version 120\nvoid main( THIS_IS_INVALID").is_err()
+}
+fn body_source(fragment: &str) -> Result<Material, macroquad::Error> {
     load_material(
         ShaderSource::Glsl {
             vertex: include_str!("../shaders/body.vert"),
-            fragment: include_str!("../shaders/body.frag"),
+            fragment,
         },
         MaterialParams {
             pipeline_params: PipelineParams {

@@ -16,6 +16,14 @@ pub fn configuration() -> macroquad::conf::Conf {
     }
 }
 pub async fn run() {
+    if std::env::args().any(|arg| arg == "--check-shader-errors") {
+        assert!(
+            crate::shaders::rejects_invalid_shader(),
+            "El cargador aceptó GLSL inválido"
+        );
+        println!("PASS: GLSL inválido rechazado mediante el cargador real; no se creó un material de sustitución");
+        return;
+    }
     let renderer = Renderer::new().expect("No se pudieron compilar los shaders GLSL");
     let catalog = bodies::catalog();
     let mut orbit = Orbit::new(20.);

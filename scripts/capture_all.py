@@ -38,8 +38,8 @@ def main():
             if digest in fingerprints:
                 raise RuntimeError(f"Vista duplicada: {path}")
             fingerprints.add(digest)
-            print(f"VERIFICADA: {path.name} ({image.width}x{image.height})")
-    print("Ocho capturas nuevas, válidas y diferentes.")
+            print(f"PASS: {path.name} ({image.width}x{image.height})")
+    print("PASS: ocho capturas nuevas, válidas y diferentes.")
 
 
 if __name__ == "__main__":
