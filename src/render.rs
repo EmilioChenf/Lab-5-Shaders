@@ -21,28 +21,33 @@ impl Renderer {
         material.set_uniform("Spin", spin);
         material.set_uniform("Tilt", tilt);
     }
-    pub fn draw(&self, catalog: &[bodies::Body; 6], time: f32, eye: Vec3) {
+    pub fn draw(&self, catalog: &[bodies::Body; 6], time: f32, eye: Vec3, selected: Option<usize>) {
         self.body.set_uniform("Time", time);
         self.body.set_uniform("Eye", eye);
         for (i, b) in catalog.iter().enumerate() {
+            if selected.is_some_and(|index| index != i) {
+                continue;
+            }
             self.body.set_uniform("Kind", i as f32);
             Self::place(&self.body, b.position, b.radius, time * b.speed, 0.);
             gl_use_material(&self.body);
             draw_mesh(&self.sphere);
         }
-        self.body.set_uniform("Kind", 6.0_f32);
-        Self::place(
-            &self.body,
-            bodies::moon_position(catalog[1].position, time),
-            0.29,
-            time * 0.2,
-            0.,
-        );
-        gl_use_material(&self.body);
-        draw_mesh(&self.sphere);
-        Self::place(&self.ring, catalog[2].position, catalog[2].radius, 0., 0.38);
-        gl_use_material(&self.ring);
-        draw_mesh(&self.annulus);
+        if selected.is_none() || selected == Some(1) {
+            self.body.set_uniform("Kind", 6.0_f32);
+            Self::place(
+                &self.body,
+                bodies::moon_position(catalog[1].position, time),
+                0.29,
+                time * 0.2,
+                0.,
+            );
+            gl_use_material(&self.body);
+            draw_mesh(&self.sphere);
+            Self::place(&self.ring, catalog[2].position, catalog[2].radius, 0., 0.38);
+            gl_use_material(&self.ring);
+            draw_mesh(&self.annulus);
+        }
         gl_use_default_material();
     }
 }

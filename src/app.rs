@@ -18,7 +18,7 @@ pub fn configuration() -> macroquad::conf::Conf {
 pub async fn run() {
     let renderer = Renderer::new().expect("No se pudieron compilar los shaders GLSL");
     let catalog = bodies::catalog();
-    let mut orbit = Orbit::new(24.);
+    let mut orbit = Orbit::new(20.);
     let mut selected = None;
     let mut paused = false;
     let mut time = 0.;
@@ -44,10 +44,10 @@ pub async fn run() {
         }
         if is_key_pressed(KeyCode::Key0) {
             selected = None;
-            orbit = Orbit::new(24.);
+            orbit = Orbit::new(20.);
         }
         if is_key_pressed(KeyCode::R) {
-            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 24. });
+            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 20. });
         }
         if is_key_pressed(KeyCode::Space) {
             paused = !paused;
@@ -59,7 +59,7 @@ pub async fn run() {
             } else {
                 Some((view - 1).min(5))
             };
-            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 24. });
+            orbit = Orbit::new(if selected.is_some() { 6.5 } else { 20. });
         }
         orbit.update();
         if !paused {
@@ -79,7 +79,7 @@ pub async fn run() {
             );
         }
         set_camera(&orbit.camera(target));
-        renderer.draw(&catalog, time, orbit.eye(target));
+        renderer.draw(&catalog, time, orbit.eye(target), selected);
         set_default_camera();
         draw_rectangle(0., 0., screen_width(), 90., Color::from_rgba(5, 8, 19, 235));
         draw_text(

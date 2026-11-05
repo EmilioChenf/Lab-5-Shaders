@@ -34,7 +34,7 @@ impl Orbit {
             position: self.eye(target),
             target,
             up: Vec3::Y,
-            fovy: 45.,
+            fovy: 45.0_f32.to_radians(),
             z_near: 0.05,
             z_far: 150.,
             ..Default::default()
