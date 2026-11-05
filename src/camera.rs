@@ -46,6 +46,35 @@ impl Orbit {
 mod tests {
     use super::*;
     #[test]
+    fn rings_fit_viewport_when_orbiting_default_focus() {
+        let body = &crate::bodies::catalog()[2];
+        let ring = crate::geometry::rings(256);
+        for pitch in [-1.35, -0.7, 0., 0.7, 1.35] {
+            for yaw in [0., 0.7, 1.9, 3.5] {
+                let orbit = Orbit {
+                    yaw,
+                    pitch,
+                    distance: crate::bodies::focus_distance(Some(2)),
+                };
+                let camera = orbit.camera(body.position);
+                // Avoid a GPU context in this geometry/projection test.
+                let matrix =
+                    Mat4::perspective_rh_gl(camera.fovy, 1440. / 900., camera.z_near, camera.z_far)
+                        * Mat4::look_at_rh(camera.position, camera.target, camera.up);
+                for vertex in &ring.vertices {
+                    let world = body.position
+                        + Mat4::from_rotation_x(0.38)
+                            .transform_point3(vertex.position * body.radius);
+                    let point = matrix.project_point3(world);
+                    assert!(
+                        point.x.abs() < 0.98 && point.y > -0.88 && point.y < 0.78,
+                        "Ring entered HUD/viewport boundary: {point:?}"
+                    );
+                }
+            }
+        }
+    }
+    #[test]
     fn orbit_preserves_distance_and_targets_translation() {
         let orbit = Orbit::new(6.5);
         let target = vec3(4., 2., -3.);

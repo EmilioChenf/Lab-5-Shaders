@@ -62,7 +62,7 @@ pub fn position(catalog: &[Body; 7], index: usize, time: f32) -> Vec3 {
 pub fn focus_distance(selected: Option<usize>) -> f32 {
     match selected {
         None => 20.,
-        Some(2) => 8.,
+        Some(2) => 10.,
         Some(6) => 2.5,
         Some(_) => 6.5,
     }
