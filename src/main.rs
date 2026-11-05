@@ -6,4 +6,6 @@ mod render;
 mod shaders;
 use app::configuration;
 #[macroquad::main(configuration)]
-async fn main() { app::run().await; }
+async fn main() {
+    app::run().await;
+}
