@@ -46,8 +46,10 @@ try:
  assert ImageChops.difference(a,b).getbbox() is not None
  print('PASS: pause freezes body pixels; resume changes them',flush=True)
  key('space');a=shot('VERDANTIS')
- xt.XTestFakeMotionEvent(d,-1,600,450,0);xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);time.sleep(.1)
- xt.XTestFakeMotionEvent(d,-1,750,510,0);x.XFlush(d);time.sleep(.2)
+ xt.XTestFakeMotionEvent(d,-1,600,450,0);x.XFlush(d);time.sleep(.2)
+ xt.XTestFakeButtonEvent(d,1,1,0);x.XFlush(d);time.sleep(.2)
+ for step in range(1,6):
+  xt.XTestFakeMotionEvent(d,-1,600+step*30,450+step*12,0);x.XFlush(d);time.sleep(.1)
  xt.XTestFakeButtonEvent(d,1,0,0);x.XFlush(d);time.sleep(.2)
  b=shot('VERDANTIS');assert ImageChops.difference(a,b).getbbox() is not None
  key('r');b=shot('VERDANTIS');assert ImageChops.difference(a,b).getbbox() is None
